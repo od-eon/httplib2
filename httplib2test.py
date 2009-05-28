@@ -556,6 +556,14 @@ class HttpTest(unittest.TestCase):
         self.assertNotEqual(int(response['content-length']), 0)
         self.assertEqual(content, "")
 
+    def testHeadRead(self):
+        # Test that we don't try to read the response of a HEAD request
+        # since httplib blocks response.read() for HEAD requests.
+        uri = "http://www.google.com"
+        (response, content) = self.http.request(uri, "HEAD")
+        self.assertEqual(response.status, 200)
+        self.assertEqual(content, "")
+
     def testGetGZip(self):
         # Test that we support gzip compression
         uri = urlparse.urljoin(base, "gzip/final-destination.txt")
