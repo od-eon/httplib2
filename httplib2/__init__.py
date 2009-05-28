@@ -349,8 +349,10 @@ def _decompressContent(response, new_content):
                 content = gzip.GzipFile(fileobj=StringIO.StringIO(new_content)).read()
             if encoding == 'deflate':
                 content = zlib.decompress(content)
+            # Record the historical presence of the encoding and content-length
+            # in a way the won't interfere.
+            response['-content-length'] = response['content-length']
             response['content-length'] = str(len(content))
-            # Record the historical presence of the encoding in a way the won't interfere.
             response['-content-encoding'] = response['content-encoding']
             del response['content-encoding']
     except IOError:
