@@ -350,8 +350,9 @@ def _decompressContent(response, new_content):
             if encoding == 'deflate':
                 content = zlib.decompress(content)
             # Record the historical presence of the encoding and content-length
-            # in a way the won't interfere.
-            response['-content-length'] = response['content-length']
+            # in a way that won't interfere.
+            if 'content-length' in response:
+                response['-content-length'] = response['content-length']
             response['content-length'] = str(len(content))
             response['-content-encoding'] = response['content-encoding']
             del response['content-encoding']
